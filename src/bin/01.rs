@@ -1,9 +1,63 @@
-pub fn part_one(input: &str) -> Option<u32> {
-    None
+
+use advent_of_code::helpers::lines_as_numbers;
+
+pub fn part_one(input: &str) -> Option<i32> {
+
+    let lines = lines_as_numbers(input);
+    
+    let mut max: i32 = 0;
+    let mut current: i32 = 0;
+
+    for line in lines {
+        match line {
+            Some (calories) => {
+                current += calories;
+            }
+            None => {
+                if current > max {
+                    max = current;
+                }
+                current = 0;
+            }
+        }
+    }
+
+    Some(max)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    None
+pub fn part_two(input: &str) -> Option<i32> {
+    let mut lines = lines_as_numbers(input);
+    lines.push(None);
+
+    let mut max1 = 0;
+    let mut max2 = 0;
+    let mut max3 = 0;
+
+    let mut current = 0;
+
+    for line in lines {
+        match line {
+            Some (calories) => {
+                current += calories;
+            }
+            None => {
+                if current > max1 {
+                    
+                    max3 = max2;
+                    max2 = max1;
+                    max1 = current;
+                } else if current > max2 {
+                    max3 = max2;
+                    max2 = current;
+                } else if current > max3 {
+                    max3 = current;
+                }
+                current = 0;
+            }
+        }
+    }
+
+    return Some(max1 + max2 + max3);
 }
 
 fn main() {
@@ -19,12 +73,12 @@ mod tests {
     #[test]
     fn test_part_one() {
         let input = advent_of_code::read_file("examples", 1);
-        assert_eq!(part_one(&input), None);
+        assert_eq!(part_one(&input), Some(24000));
     }
 
     #[test]
     fn test_part_two() {
         let input = advent_of_code::read_file("examples", 1);
-        assert_eq!(part_two(&input), None);
+        assert_eq!(part_two(&input), Some(45000));
     }
 }
