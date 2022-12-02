@@ -1,16 +1,14 @@
-
 use advent_of_code::helpers::lines_as_numbers;
 
 pub fn part_one(input: &str) -> Option<i32> {
-
     let lines = lines_as_numbers(input);
-    
+
     let mut max: i32 = 0;
     let mut current: i32 = 0;
 
     for line in lines {
         match line {
-            Some (calories) => {
+            Some(calories) => {
                 current += calories;
             }
             None => {
@@ -37,12 +35,11 @@ pub fn part_two(input: &str) -> Option<i32> {
 
     for line in lines {
         match line {
-            Some (calories) => {
+            Some(calories) => {
                 current += calories;
             }
             None => {
                 if current > max1 {
-                    
                     max3 = max2;
                     max2 = max1;
                     max1 = current;

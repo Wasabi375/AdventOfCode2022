@@ -6,17 +6,16 @@ enum Move {
 }
 
 impl Move {
-    fn new (char: char) -> Move {
+    fn new(char: char) -> Move {
         match char {
             'A' | 'X' => Move::Rock,
             'B' | 'Y' => Move::Paper,
             'C' | 'Z' => Move::Scissors,
-            _ => panic!("unknown move '{}'", char)
+            _ => panic!("unknown move '{}'", char),
         }
     }
 
     fn get_score(self: &Move) -> u32 {
-
         match self {
             Move::Rock => 1,
             Move::Paper => 2,
@@ -25,12 +24,11 @@ impl Move {
     }
 }
 
-
 #[derive(Eq, PartialEq, Debug)]
 enum RoundResult {
     Win,
     Loose,
-    Draw
+    Draw,
 }
 
 impl RoundResult {
@@ -39,7 +37,7 @@ impl RoundResult {
             'X' => RoundResult::Loose,
             'Y' => RoundResult::Draw,
             'Z' => RoundResult::Win,
-            _ => panic!("unknown round result '{}'", char)
+            _ => panic!("unknown round result '{}'", char),
         }
     }
 
@@ -54,9 +52,9 @@ impl RoundResult {
 
 fn get_result(elf: &Move, player: &Move) -> RoundResult {
     if elf == player {
-        return RoundResult::Draw
+        return RoundResult::Draw;
     }
-    
+
     let elf_score = elf.get_score() - 1;
     let player_score = player.get_score() - 1;
 
@@ -68,24 +66,21 @@ fn get_result(elf: &Move, player: &Move) -> RoundResult {
 }
 
 fn get_player_move(elf: &Move, result: &RoundResult) -> Move {
-    
     let offset = match result {
         RoundResult::Draw => return elf.clone(),
         RoundResult::Loose => -1,
-        RoundResult::Win => 1
+        RoundResult::Win => 1,
     };
 
     let result_ordinal = (elf.ordinal() + offset + 3) % 3;
 
     Move::from_ordinal(result_ordinal).unwrap()
-
 }
 
 use advent_of_code::helpers::lines;
 use enum_ordinalize::Ordinalize;
 
 pub fn part_one(input: &str) -> Option<u32> {
-
     let mut score = 0;
 
     for round in lines(input) {
@@ -105,7 +100,6 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    
     let mut score = 0;
 
     for round in lines(input) {
@@ -144,11 +138,17 @@ mod tests {
 
         assert_eq!(get_result(&Move::Paper, &Move::Rock), RoundResult::Win);
         assert_eq!(get_result(&Move::Paper, &Move::Paper), RoundResult::Draw);
-        assert_eq!(get_result(&Move::Paper, &Move::Scissors), RoundResult::Loose);
+        assert_eq!(
+            get_result(&Move::Paper, &Move::Scissors),
+            RoundResult::Loose
+        );
 
         assert_eq!(get_result(&Move::Scissors, &Move::Rock), RoundResult::Loose);
         assert_eq!(get_result(&Move::Scissors, &Move::Paper), RoundResult::Win);
-        assert_eq!(get_result(&Move::Scissors, &Move::Scissors), RoundResult::Draw);
+        assert_eq!(
+            get_result(&Move::Scissors, &Move::Scissors),
+            RoundResult::Draw
+        );
     }
 
     #[test]
