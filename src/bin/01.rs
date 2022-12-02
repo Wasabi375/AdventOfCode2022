@@ -57,7 +57,7 @@ pub fn part_two(input: &str) -> Option<i32> {
         }
     }
 
-    return Some(max1 + max2 + max3);
+    Some(max1 + max2 + max3)
 }
 
 fn main() {
