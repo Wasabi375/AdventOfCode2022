@@ -1,3 +1,6 @@
+use advent_of_code::helpers::lines;
+use enum_ordinalize::Ordinalize;
+
 #[derive(Eq, PartialEq, Debug, Ordinalize, Clone)]
 enum Move {
     Rock,
@@ -15,7 +18,7 @@ impl Move {
         }
     }
 
-    fn get_score(self: &Move) -> u32 {
+    fn get_score(&self) -> u32 {
         match self {
             Move::Rock => 1,
             Move::Paper => 2,
@@ -41,7 +44,7 @@ impl RoundResult {
         }
     }
 
-    fn get_score(self: &RoundResult) -> u32 {
+    fn get_score(&self) -> u32 {
         match self {
             RoundResult::Win => 6,
             RoundResult::Loose => 0,
@@ -76,9 +79,6 @@ fn get_player_move(elf: &Move, result: &RoundResult) -> Move {
 
     Move::from_ordinal(result_ordinal).unwrap()
 }
-
-use advent_of_code::helpers::lines;
-use enum_ordinalize::Ordinalize;
 
 pub fn part_one(input: &str) -> Option<u32> {
     let mut score = 0;
