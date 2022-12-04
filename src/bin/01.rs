@@ -24,7 +24,7 @@ pub fn part_one(input: &str) -> Option<i32> {
 }
 
 pub fn part_two(input: &str) -> Option<i32> {
-    let mut lines = lines_as_numbers(input);
+    let mut lines: Vec<_> = lines_as_numbers(input).collect();
     lines.push(None);
 
     let mut max1 = 0;
