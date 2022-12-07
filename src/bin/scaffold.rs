@@ -5,7 +5,7 @@
 use std::{
     fs::{File, OpenOptions},
     io::Write,
-    process,
+    process::{self, Command, Stdio},
 };
 
 const MODULE_TEMPLATE: &str = r###"pub fn part_one(input: &str) -> Option<u32> {
@@ -40,9 +40,17 @@ mod tests {
 }
 "###;
 
-fn parse_args() -> Result<u8, pico_args::Error> {
+struct Args {
+    day: u8,
+    download: bool,
+}
+
+fn parse_args() -> Result<Args, pico_args::Error> {
     let mut args = pico_args::Arguments::from_env();
-    args.free_from_str()
+    Ok(Args {
+        day: args.free_from_str()?,
+        download: args.contains(["-d", "--download"]),
+    })
 }
 
 fn safe_create_file(path: &str) -> Result<File, std::io::Error> {
@@ -54,13 +62,15 @@ fn create_file(path: &str) -> Result<File, std::io::Error> {
 }
 
 fn main() {
-    let day = match parse_args() {
-        Ok(day) => day,
-        Err(_) => {
-            eprintln!("Need to specify a day (as integer). example: `cargo scaffold 7`");
+    let args = match parse_args() {
+        Ok(args) => args,
+        Err(e) => {
+            eprintln!("Failed to process arguments: {}", e);
             process::exit(1);
         }
     };
+
+    let day = args.day;
 
     let day_padded = format!("{:02}", day);
 
@@ -111,4 +121,14 @@ fn main() {
         "🎄 Type `cargo solve {}` to run your solution.",
         &day_padded
     );
+
+    if args.download {
+        println!("---");
+        Command::new("cargo")
+            .stderr(Stdio::piped())
+            .stdout(Stdio::piped())
+            .args(["download", &day_padded])
+            .output()
+            .unwrap();
+    }
 }
